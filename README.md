@@ -1,0 +1,1 @@
+# nextdns-log-to-azure
