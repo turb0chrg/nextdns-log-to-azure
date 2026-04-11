@@ -80,13 +80,12 @@ resource keyVaultResource 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
 
 resource keyVaultSecretsUserAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: keyVaultResource
-  name: guid(keyVaultResource.id, functionApp.outputs.principalId, keyVaultSecretsUserRoleId)
+  name: guid(keyVaultResource.id, functionAppName, keyVaultSecretsUserRoleId)
   properties: {
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', keyVaultSecretsUserRoleId)
     principalId: functionApp.outputs.principalId
     principalType: 'ServicePrincipal'
   }
-  dependsOn: [keyVault, functionApp]
 }
 
 output logAnalyticsWorkspaceId string = logAnalytics.outputs.workspaceId
