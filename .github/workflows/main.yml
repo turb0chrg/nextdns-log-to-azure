@@ -35,16 +35,16 @@ jobs:
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        resourceGroupName: ${{ secrets.AZURE_RG }}
+        resourceGroupName: ${{ vars.AZURE_RG }}
         template: ./infra/main.bicep
         parameters: >
-          functionAppName=${{ secrets.FUNCTION_APP_NAME }}
-          appServicePlanName=${{ secrets.APP_SERVICE_PLAN_NAME }}
-          storageAccountName=${{ secrets.STORAGE_ACCOUNT_NAME }}
-          workspaceName=${{ secrets.WORKSPACE_NAME }}
-          keyVaultName=${{ secrets.KEY_VAULT_NAME }}
+          functionAppName=${{ vars.FUNCTION_APP_NAME }}
+          appServicePlanName=${{ vars.APP_SERVICE_PLAN_NAME }}
+          storageAccountName=${{ vars.STORAGE_ACCOUNT_NAME }}
+          workspaceName=${{ vars.WORKSPACE_NAME }}
+          keyVaultName=${{ vars.KEY_VAULT_NAME }}
           nextDnsApiKey=${{ secrets.NEXTDNS_API_KEY }}
-          nextDnsProfileId=${{ secrets.NEXTDNS_PROFILE_ID }}
+          nextDnsProfileId=${{ vars.NEXTDNS_PROFILE_ID }}
           logAnalyticsWorkspaceKey=${{ secrets.LOG_ANALYTICS_WORKSPACE_KEY }}
         failOnStdErr: false
 
