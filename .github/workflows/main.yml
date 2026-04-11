@@ -6,6 +6,7 @@ on:
 name: Deploy to Azure
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   AZURE_FUNCTIONAPP_PACKAGE_PATH: ./function-app
   AZURE_RESOURCE_GROUP_NAME: ${{ vars.AZURE_RG }}
   AZURE_FUNCTION_APP_NAME: ${{ vars.FUNCTION_APP_NAME }}
@@ -33,7 +34,7 @@ jobs:
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: Deploy Bicep
-      uses: azure/arm-deploy@v1
+      uses: azure/arm-deploy@v2
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         resourceGroupName: ${{ vars.AZURE_RG }}
@@ -64,6 +65,6 @@ jobs:
     - name: Deploy Function App code
       uses: Azure/functions-action@v1
       with:
-        app-name: ${{ secrets.FUNCTION_APP_NAME }}
+        app-name: ${{ vars.FUNCTION_APP_NAME }}
         package: ./function-app
         scm-do-build-during-deployment: false
