@@ -29,10 +29,6 @@ param nextDnsProfileId string
 @description('Group object ID to assign Key Vault Secrets Officer role')
 param keyVaultSecretsOfficerObjectId string
 
-@description('Log Analytics workspace shared key')
-@secure()
-param logAnalyticsWorkspaceKey string
-
 @description('How many minutes of logs to pull on each run')
 param lookbackMinutes int = 60
 
@@ -61,6 +57,8 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
     WorkspaceResourceId: logAnalytics.outputs.workspaceId
   }
 }
+
+var logAnalyticsWorkspaceKey = listKeys(resourceId('Microsoft.OperationalInsights/workspaces', workspaceName), '2021-06-01').primarySharedKey
 
 module keyVault 'deploy-keyvault.bicep' = {
   name: 'keyVault'
