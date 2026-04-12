@@ -98,7 +98,7 @@ resource keyVaultSecretsOfficerAssignment 'Microsoft.Authorization/roleAssignmen
   properties: {
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', keyVaultSecretsOfficerRoleId)
     principalId: keyVaultSecretsOfficerObjectId
-    principalType: 'ServicePrincipal'
+    principalType: 'Group'
   }
 }
 
