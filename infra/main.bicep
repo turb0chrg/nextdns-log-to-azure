@@ -26,6 +26,9 @@ param nextDnsApiKey string
 @description('NextDNS profile ID')
 param nextDnsProfileId string
 
+@description('Principal ID to assign Key Vault Secrets Officer role')
+param keyVaultSecretsOfficerObjectId string
+
 @description('Log Analytics workspace shared key')
 @secure()
 param logAnalyticsWorkspaceKey string
@@ -38,6 +41,7 @@ param timerSchedule string = '0 0 * * * *'
 
 // Role definition ID for Key Vault Secrets User (built-in)
 var keyVaultSecretsUserRoleId = '4633458b-17de-408a-b874-0445c86b69e6'
+var keyVaultSecretsOfficerRoleId = 'b86a8fe4-44ce-4948-aee5-eccb2c155cd7'
 
 module logAnalytics 'deploy-log-analytics.bicep' = {
   name: 'logAnalytics'
@@ -84,6 +88,16 @@ resource keyVaultSecretsUserAssignment 'Microsoft.Authorization/roleAssignments@
   properties: {
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', keyVaultSecretsUserRoleId)
     principalId: functionApp.outputs.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+resource keyVaultSecretsOfficerAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: keyVaultResource
+  name: guid(keyVaultResource.id, keyVaultSecretsOfficerObjectId, keyVaultSecretsOfficerRoleId)
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', keyVaultSecretsOfficerRoleId)
+    principalId: keyVaultSecretsOfficerObjectId
     principalType: 'ServicePrincipal'
   }
 }

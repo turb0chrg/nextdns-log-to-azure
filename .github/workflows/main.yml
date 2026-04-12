@@ -47,6 +47,7 @@ jobs:
           keyVaultName=${{ vars.KEY_VAULT_NAME }}
           nextDnsApiKey=${{ secrets.NEXTDNS_API_KEY }}
           nextDnsProfileId=${{ vars.NEXTDNS_PROFILE_ID }}
+          keyVaultSecretsOfficerObjectId=${{ vars.KEY_VAULT_SECRETS_OFFICER_PRINCIPAL_ID }}
           logAnalyticsWorkspaceKey=${{ secrets.LOG_ANALYTICS_WORKSPACE_KEY }}
         failOnStdErr: false
 
