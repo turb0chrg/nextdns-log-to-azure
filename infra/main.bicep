@@ -26,7 +26,7 @@ param nextDnsApiKey string
 @description('NextDNS profile ID')
 param nextDnsProfileId string
 
-@description('Principal ID to assign Key Vault Secrets Officer role')
+@description('Group object ID to assign Key Vault Secrets Officer role')
 param keyVaultSecretsOfficerObjectId string
 
 @description('Log Analytics workspace shared key')
