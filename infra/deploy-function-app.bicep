@@ -19,6 +19,9 @@ param keyVaultName string
 @description('Log Analytics workspace ID')
 param logAnalyticsWorkspaceId string
 
+@description('Application Insights instrumentation key')
+param applicationInsightsInstrumentationKey string
+
 @description('How many minutes of logs to pull on each run')
 param lookbackMinutes int = 60
 
@@ -80,6 +83,14 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'LOG_ANALYTICS_WORKSPACE_ID'
           value: logAnalyticsWorkspaceId
+        }
+        {
+          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+          value: 'InstrumentationKey=${applicationInsightsInstrumentationKey}'
+        }
+        {
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: applicationInsightsInstrumentationKey
         }
         {
           name: 'LOG_ANALYTICS_WORKSPACE_KEY'

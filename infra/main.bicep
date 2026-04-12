@@ -52,6 +52,16 @@ module logAnalytics 'deploy-log-analytics.bicep' = {
   }
 }
 
+resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: '${workspaceName}-appi'
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    WorkspaceResourceId: logAnalytics.outputs.workspaceId
+  }
+}
+
 module keyVault 'deploy-keyvault.bicep' = {
   name: 'keyVault'
   params: {
@@ -72,6 +82,7 @@ module functionApp 'deploy-function-app.bicep' = {
     nextDnsProfileId: nextDnsProfileId
     keyVaultName: keyVault.outputs.keyVaultName
     logAnalyticsWorkspaceId: logAnalytics.outputs.workspaceId
+    applicationInsightsInstrumentationKey: appInsights.properties.InstrumentationKey
     lookbackMinutes: lookbackMinutes
     timerSchedule: timerSchedule
   }
@@ -104,5 +115,7 @@ resource keyVaultSecretsOfficerAssignment 'Microsoft.Authorization/roleAssignmen
 
 output logAnalyticsWorkspaceId string = logAnalytics.outputs.workspaceId
 output logAnalyticsWorkspaceName string = logAnalytics.outputs.workspaceName
+output applicationInsightsInstrumentationKey string = appInsights.properties.InstrumentationKey
+output applicationInsightsName string = appInsights.name
 output keyVaultUri string = keyVault.outputs.keyVaultUri
 output functionAppHostName string = functionApp.outputs.functionAppDefaultHostName
