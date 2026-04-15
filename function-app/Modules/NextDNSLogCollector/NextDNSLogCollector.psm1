@@ -55,6 +55,14 @@ function Send-ToLogAnalytics {
 
     if (-not $Logs -or $Logs.Count -eq 0) { Write-Host "No logs to send."; return }
 
+    if (-not $WorkspaceId) {
+        throw "Invalid Log Analytics workspace ID: value is missing. Use the workspace customer ID (GUID)."
+    }
+
+    if ($WorkspaceId -match '^/' -or $WorkspaceId -match 'ods\.opinsights\.azure\.com') {
+        throw "Invalid Log Analytics workspace ID: received a resource path or hostname. Use the workspace customer ID (GUID), not the workspace resource ID or endpoint."
+    }
+
     $body          = $Logs | ConvertTo-Json -Depth 10 -Compress
     $bodyBytes     = [System.Text.Encoding]::UTF8.GetBytes($body)
     $rfc1123Date   = [System.DateTime]::UtcNow.ToString("r")

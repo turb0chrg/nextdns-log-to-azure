@@ -4,7 +4,7 @@ param($Timer)
 # resolves them at runtime using its system-assigned managed identity.
 $NextDNSApiKey    = $env:NEXTDNS_API_KEY
 $NextDNSProfileId = $env:NEXTDNS_PROFILE_ID
-$WorkspaceId      = $env:LOG_ANALYTICS_WORKSPACE_ID
+$WorkspaceId      = if ($env:LOG_ANALYTICS_WORKSPACE_CUSTOMER_ID) { $env:LOG_ANALYTICS_WORKSPACE_CUSTOMER_ID } else { $env:LOG_ANALYTICS_WORKSPACE_ID }
 $WorkspaceKey     = $env:LOG_ANALYTICS_WORKSPACE_KEY
 $LookbackMinutes  = [int]$env:LOOKBACK_MINUTES
 $LogType          = 'NextDNS_CL'

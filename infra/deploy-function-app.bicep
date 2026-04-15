@@ -16,8 +16,8 @@ param nextDnsProfileId string
 @description('Name of the Key Vault holding secrets')
 param keyVaultName string
 
-@description('Log Analytics workspace ID')
-param logAnalyticsWorkspaceId string
+@description('Log Analytics workspace customer ID')
+param logAnalyticsWorkspaceCustomerId string
 
 @description('Application Insights instrumentation key')
 param applicationInsightsInstrumentationKey string
@@ -81,8 +81,12 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
           value: nextDnsProfileId
         }
         {
+          name: 'LOG_ANALYTICS_WORKSPACE_CUSTOMER_ID'
+          value: logAnalyticsWorkspaceCustomerId
+        }
+        {
           name: 'LOG_ANALYTICS_WORKSPACE_ID'
-          value: logAnalyticsWorkspaceId
+          value: logAnalyticsWorkspaceCustomerId
         }
         {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'

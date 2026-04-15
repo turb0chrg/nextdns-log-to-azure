@@ -70,6 +70,8 @@ module keyVault 'deploy-keyvault.bicep' = {
   }
 }
 
+var logAnalyticsWorkspaceCustomerId = logAnalytics.outputs.customerId
+
 module functionApp 'deploy-function-app.bicep' = {
   name: 'functionApp'
   params: {
@@ -79,7 +81,7 @@ module functionApp 'deploy-function-app.bicep' = {
     storageAccountName: storageAccountName
     nextDnsProfileId: nextDnsProfileId
     keyVaultName: keyVault.outputs.keyVaultName
-    logAnalyticsWorkspaceId: logAnalytics.outputs.workspaceId
+    logAnalyticsWorkspaceCustomerId: logAnalyticsWorkspaceCustomerId
     applicationInsightsInstrumentationKey: appInsights.properties.InstrumentationKey
     lookbackMinutes: lookbackMinutes
     timerSchedule: timerSchedule

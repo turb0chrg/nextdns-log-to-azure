@@ -20,3 +20,4 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
 
 output workspaceId string = logAnalyticsWorkspace.id
 output workspaceName string = logAnalyticsWorkspace.name
+output customerId string = logAnalyticsWorkspace.properties.customerId
