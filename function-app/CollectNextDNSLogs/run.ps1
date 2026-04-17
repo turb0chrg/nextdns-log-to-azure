@@ -20,6 +20,11 @@ foreach ($profile in $profiles) {
     $logs = Get-NextDNSLogs -ApiKey $NextDNSApiKey -ProfileId $profile.id -LookbackMinutes $LookbackMinutes
     if ($logs) {
         Write-Host "Retrieved $($logs.Count) log entries from profile '$($profile.id)'."
+        # Tag each log with the profile it came from
+        foreach ($log in $logs) {
+            $log | Add-Member -NotePropertyName "profileId" -NotePropertyValue $profile.id
+            $log | Add-Member -NotePropertyName "profileName" -NotePropertyValue $profile.name
+        }
         $allLogs += $logs
     } else {
         Write-Host "No logs retrieved from profile '$($profile.id)'."
@@ -29,7 +34,7 @@ foreach ($profile in $profiles) {
 Write-Host "Total log entries across all profiles: $(@($allLogs).Count)"
 
 if ($allLogs.Count -gt 0) {
-    $flatLogs = $allLogs | ForEach-Object { ConvertTo-FlatLogEntry -Entry $_ }
+    $flatLogs = $allLogs | ForEach-Object { ConvertTo-FlatLogEntry -Entry $_ -ProfileId $_.profileId -ProfileName $_.profileName }
 
     # Send in batches of 500 to stay well within the 30 MB Log Analytics payload limit.
     $batchSize = 500

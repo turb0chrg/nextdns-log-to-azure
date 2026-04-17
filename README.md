@@ -128,6 +128,8 @@ Logs land in the `NextDNS_CL` table. The NextDNS API response is flattened befor
 
 | Column | Type | Description |
 |---|---|---|
+| `profile_id_s` | string | NextDNS profile ID |
+| `profile_name_s` | string | NextDNS profile name |
 | `timestamp_t` | datetime | When the DNS query occurred |
 | `domain_s` | string | Queried domain |
 | `root_s` | string | Root domain |
@@ -171,6 +173,12 @@ NextDNS_CL
 | where TimeGenerated > ago(7d)
 | summarize queries = count() by device_name_s, bin(TimeGenerated, 1h)
 | render timechart
+
+// Queries grouped by profile and device
+NextDNS_CL
+| where TimeGenerated > ago(24h)
+| summarize count() by profile_name_s, device_name_s
+| order by profile_name_s, count_ desc
 ```
 
 ## Estimated monthly cost

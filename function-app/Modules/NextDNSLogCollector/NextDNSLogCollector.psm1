@@ -40,13 +40,15 @@ function Get-NextDNSLogs {
 }
 
 function ConvertTo-FlatLogEntry {
-    param ([object]$Entry)
+    param ([object]$Entry, [string]$ProfileId, [string]$ProfileName)
 
     # Log Analytics expands top-level primitives into typed columns (_s, _b, _d, _t).
     # Nested objects and arrays are serialized as a single string column instead.
     # This function promotes device sub-fields to the top level so they get their
     # own queryable columns, and serializes the reasons array to a JSON string.
     $flat = [ordered]@{
+        profile_id   = $ProfileId
+        profile_name = $ProfileName
         timestamp    = $Entry.timestamp
         domain       = $Entry.domain
         root         = $Entry.root
