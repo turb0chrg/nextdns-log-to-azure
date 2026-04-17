@@ -23,9 +23,6 @@ param pricingTier string = 'PerGB2018'
 @secure()
 param nextDnsApiKey string
 
-@description('NextDNS profile ID')
-param nextDnsProfileId string
-
 @description('Group object ID to assign Key Vault Secrets Officer role')
 param keyVaultSecretsOfficerObjectId string
 
@@ -79,7 +76,6 @@ module functionApp 'deploy-function-app.bicep' = {
     location: location
     appServicePlanName: appServicePlanName
     storageAccountName: storageAccountName
-    nextDnsProfileId: nextDnsProfileId
     keyVaultName: keyVault.outputs.keyVaultName
     logAnalyticsWorkspaceCustomerId: logAnalyticsWorkspaceCustomerId
     applicationInsightsInstrumentationKey: appInsights.properties.InstrumentationKey

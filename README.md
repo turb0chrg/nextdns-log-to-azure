@@ -1,6 +1,6 @@
 # nextdns-log-to-azure
 
-Pulls DNS query logs from the [NextDNS API](https://nextdns.io) on a schedule and ships them to an Azure Log Analytics workspace for querying, alerting, and long-term retention.
+Pulls DNS query logs from all [NextDNS profiles](https://nextdns.github.io/api/#profiles) via the NextDNS API on a schedule and ships them to an Azure Log Analytics workspace for querying, alerting, and long-term retention.
 
 ## Architecture
 
@@ -53,7 +53,7 @@ The shared logic (NextDNS pagination, response flattening, Log Analytics signing
 - [Az PowerShell module](https://learn.microsoft.com/powershell/azure/install-az-ps) (`Install-Module -Name Az -Scope CurrentUser`)
 - [Azure Functions Core Tools v4](https://learn.microsoft.com/azure/azure-functions/functions-run-local)
 - PowerShell 7+
-- A NextDNS account — API key and profile ID from [nextdns.io/account](https://nextdns.io/account)
+- A NextDNS account with an API key from [nextdns.io/account](https://nextdns.io/account)
 - An Azure subscription and a resource group
 
 ## Deployment
@@ -68,8 +68,7 @@ Set-AzContext -SubscriptionId "<your-subscription-id>"
 ### 2. Deploy the infrastructure
 
 ```powershell
-$nextDnsApiKey           = Read-Host "NextDNS API key"           -AsSecureString
-$logAnalyticsWorkspaceKey = Read-Host "Log Analytics workspace key" -AsSecureString
+$nextDnsApiKey = Read-Host "NextDNS API key"           -AsSecureString
 
 New-AzResourceGroupDeployment `
   -ResourceGroupName    "<your-resource-group>" `
@@ -80,20 +79,20 @@ New-AzResourceGroupDeployment `
   -workspaceName        "nextdns-logs" `
   -keyVaultName         "nextdns-kv" `
   -nextDnsApiKey        $nextDnsApiKey `
-  -nextDnsProfileId     "<your-nextdns-profile-id>" `
-  -logAnalyticsWorkspaceKey $logAnalyticsWorkspaceKey
+  -keyVaultSecretsOfficerObjectId "<your-aad-group-object-id>"
 ```
 
 > Using `Read-Host -AsSecureString` avoids your secrets appearing in shell history.
 
 > **Where to find the values:**
-> - `nextDnsApiKey` / `nextDnsProfileId` — [nextdns.io/account](https://nextdns.io/account)
-> - `logAnalyticsWorkspaceKey` — Azure Portal → Log Analytics workspace → Agents → Log Analytics agent instructions
+> - `nextDnsApiKey` — [nextdns.io/account](https://nextdns.io/account)
+> - `keyVaultSecretsOfficerObjectId` — Azure AD group object ID for Key Vault administration (optional if not managing Key Vault yourself)
 
 This single deployment:
-1. Creates the Key Vault and stores the secrets
-2. Deploys the Function App with a system-assigned managed identity
-3. Grants the identity `Key Vault Secrets User` on the vault
+1. Queries all NextDNS profiles automatically via the API (no profile ID configuration needed)
+2. Creates the Key Vault and stores the secrets
+3. Deploys the Function App with a system-assigned managed identity
+4. Grants the identity `Key Vault Secrets User` on the vault
 
 Optional parameters and their defaults:
 
@@ -107,7 +106,7 @@ Optional parameters and their defaults:
 ### 3. Publish the function code
 
 ```powershell
-Set-Location function-app
+cd function-app
 func azure functionapp publish nextdns-func
 ```
 
@@ -116,11 +115,12 @@ func azure functionapp publish nextdns-func
 ```powershell
 .\Send-NextDNSLogs.ps1 `
   -NextDNSApiKey    "<your-nextdns-api-key>" `
-  -NextDNSProfileId "<your-nextdns-profile-id>" `
   -WorkspaceId      "<your-log-analytics-workspace-id>" `
   -WorkspaceKey     "<your-log-analytics-workspace-key>" `
   -LookbackMinutes  60
 ```
+
+The script automatically queries all your NextDNS profiles and collects logs from each.
 
 ## Log Analytics schema
 

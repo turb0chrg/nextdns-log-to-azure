@@ -1,3 +1,20 @@
+function Get-NextDNSProfiles {
+    param ([string]$ApiKey)
+
+    # Fetch all NextDNS profiles. The /profiles endpoint returns all profiles without pagination.
+    $uri     = "https://api.nextdns.io/profiles"
+    $headers = @{ "X-Api-Key" = $ApiKey; "Accept" = "application/json" }
+
+    Write-Host "GET $uri"
+    $response = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
+
+    if ($response.data) {
+        return $response.data
+    }
+
+    return @()
+}
+
 function Get-NextDNSLogs {
     param ([string]$ApiKey, [string]$ProfileId, [int]$LookbackMinutes)
 
@@ -107,4 +124,4 @@ function _Build-Signature {
     return "SharedKey ${WorkspaceId}:${encoded}"
 }
 
-Export-ModuleMember -Function Get-NextDNSLogs, ConvertTo-FlatLogEntry, Send-ToLogAnalytics
+Export-ModuleMember -Function Get-NextDNSProfiles, Get-NextDNSLogs, ConvertTo-FlatLogEntry, Send-ToLogAnalytics

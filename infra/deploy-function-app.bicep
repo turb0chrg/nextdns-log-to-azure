@@ -10,9 +10,6 @@ param appServicePlanName string
 @description('Storage account name for the Function App')
 param storageAccountName string
 
-@description('NextDNS profile ID')
-param nextDnsProfileId string
-
 @description('Name of the Key Vault holding secrets')
 param keyVaultName string
 
@@ -75,10 +72,6 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'NEXTDNS_API_KEY'
           value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=nextdns-api-key)'
-        }
-        {
-          name: 'NEXTDNS_PROFILE_ID'
-          value: nextDnsProfileId
         }
         {
           name: 'LOG_ANALYTICS_WORKSPACE_CUSTOMER_ID'
