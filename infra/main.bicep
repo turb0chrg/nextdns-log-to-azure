@@ -24,6 +24,7 @@ param pricingTier string = 'PerGB2018'
 param nextDnsApiKey string
 
 @description('Group object ID to assign Key Vault Secrets Officer role')
+//disable-next-line
 param keyVaultSecretsOfficerObjectId string
 
 @description('How many minutes of logs to pull on each run')

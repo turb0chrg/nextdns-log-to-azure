@@ -171,7 +171,7 @@ NextDNS_CL
 // Query volume per device over the last 7 days
 NextDNS_CL
 | where TimeGenerated > ago(7d)
-| summarize queries = count() by device_name_s, bin(TimeGenerated, 1h)
+| summarize allqueries = count() by device_name_s, bin(TimeGenerated, 1h)
 | render timechart
 
 // Queries grouped by profile and device
